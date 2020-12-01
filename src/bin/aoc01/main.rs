@@ -24,30 +24,33 @@ fn parse_input(input: std::string::String) -> Vec<i64> {
 }
 
 fn main() {
-    let mut values: Vec<i64> = parse_input(get_input());
+    let values = parse_input(get_input());
 
-    part_one(&mut values);
+    part_one(values);
 }
 
-fn part_one(values: &mut Vec<i64>) {
+fn part_one(values: Vec<i64>) -> i64 {
 
     let (a, b) = find_sum_parts(values, 2020);
     let solution = a * b;
 
     println!("The solution to part 1 is {} ({} * {}).", solution, a, b);
+
+    solution
 }
 
-fn find_sum_parts(values: &mut Vec<i64>, total: i64) -> (i64, i64) {
+fn find_sum_parts(values: Vec<i64>, total: i64) -> (i64, i64) {
 
-    values.sort_unstable();
+    let mut sorted = values;
+    sorted.sort_unstable();
 
     let mut low_index = 0;
-    let mut high_index = values.len() - 1;
+    let mut high_index = sorted.len() - 1;
 
     while low_index < high_index {
 
-        let low = values[low_index];
-        let high = values[high_index];
+        let low = sorted[low_index];
+        let high = sorted[high_index];
         let sum = low + high;
 
         match sum {
