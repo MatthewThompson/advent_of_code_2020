@@ -62,3 +62,23 @@ fn find_sum_parts(values: Vec<i64>, total: i64) -> (i64, i64) {
 
     panic!("No solution.");
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::part_one;
+
+    #[test]
+    fn test_part_one() {
+        let example_values: Vec<i64> = vec![
+            1721,
+            979,
+            366,
+            299,
+            675,
+            1456,
+        ];
+
+        assert_eq!(part_one(example_values), 514579);
+    }
+}
