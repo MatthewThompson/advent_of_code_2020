@@ -106,10 +106,10 @@ fn check_password_validity_two(pass: &DatabasePassword) -> bool {
 
     let policy_letter = pass.policy.letter;
 
-    let password_chars = pass.password.chars();
+    let password_chars: Vec<_> = pass.password.chars().collect();
 
-    (password_chars.clone().nth(first_index).unwrap() == policy_letter) ^
-        (password_chars.clone().nth(second_index).unwrap() == policy_letter)
+    (password_chars[first_index] == policy_letter) ^
+        (password_chars[second_index] == policy_letter)
 }
 
 #[cfg(test)]
