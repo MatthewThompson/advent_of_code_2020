@@ -37,16 +37,16 @@ fn get_seat_id(pass: &str) -> u32 {
 
 fn bin_str_to_int(bin_str: &str) -> u32 {
 
-    bin_str.chars().map(|c| {
-        match c {
+    bin_str.chars().fold(0, |acc, c| {
+        let bit = match c {
             'F' => 0,
             'B' => 1,
             'L' => 0,
             'R' => 1,
             _ => panic!("Unexpected char"),
-        }
+        };
+        (acc << 1) + bit
     })
-    .fold(0, |acc, i| (acc << 1) + i)
 }
 
 fn main() {
