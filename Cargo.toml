@@ -5,11 +5,5 @@ authors = ["Matthew Thompson <mat@matthewjthompson.co.uk>"]
 edition = "2018"
 
 [dependencies]
-
-[[bin]]
-name = "aoc01"
-path = "src/bin/aoc01/main.rs"
-
-[[bin]]
-name = "aoc02"
-path = "src/bin/aoc02/main.rs"
+regex = "1.4.2"
+lazy_static = "1.4.0"
