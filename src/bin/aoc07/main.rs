@@ -149,7 +149,7 @@ mod tests {
     use super::part_two;
 
     #[test]
-    fn test_part_one() {
+    fn test_day_seven_part_one() {
 let example_input = String::from("light red bags contain 1 bright white bag, 2 muted yellow bags.
 dark orange bags contain 3 bright white bags, 4 muted yellow bags.
 bright white bags contain 1 shiny gold bag.
@@ -164,7 +164,7 @@ dotted black bags contain no other bags.");
     }
 
     #[test]
-    fn test_part_two() {
+    fn test_day_seven_part_two() {
         let example_input = String::from("light red bags contain 1 bright white bag, 2 muted yellow bags.
 dark orange bags contain 3 bright white bags, 4 muted yellow bags.
 bright white bags contain 1 shiny gold bag.

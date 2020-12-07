@@ -133,7 +133,7 @@ mod tests {
     use super::part_two;
 
     #[test]
-    fn test_part_one() {
+    fn test_day_one_part_one() {
         let example_values: Vec<i64> = vec![
             1721,
             979,
@@ -147,7 +147,7 @@ mod tests {
     }
 
     #[test]
-    fn test_part_two() {
+    fn test_day_one_part_two() {
         let example_values: Vec<i64> = vec![
             1721,
             979,

@@ -110,7 +110,7 @@ mod tests {
     use super::part_two;
 
     #[test]
-    fn test_part_one() {
+    fn test_day_three_part_one() {
         let example_input =
 "..##.......
 #...#...#..
@@ -129,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    fn test_part_two() {
+    fn test_day_three_part_two() {
         let example_input =
 "..##.......
 #...#...#..
