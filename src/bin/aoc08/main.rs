@@ -1,6 +1,8 @@
 use std::env;
 use std::fs;
 use std::time::SystemTime;
+
+use std::str::FromStr;
 use std::collections::HashSet;
 
 fn default_input_path() -> std::path::PathBuf {
@@ -21,31 +23,15 @@ fn get_input() -> std::string::String {
 
 fn parse_input(input: std::string::String) -> Computer {
 
-    Computer::new(
-        input.lines().map(parse_op).collect()
-    )
-}
+    let operations = input.lines()
+        .map(|line| {
+            match Operation::from_str(line) {
+                Ok(op) => op,
+                Err(message) => panic!(format!("Failed to parse {} with error: {}", line, message)),
+            }
+        }).collect();
 
-// Could refactor to use "FromStr" instead, maybe more rusty
-fn parse_op(line: &str) -> Operation {
-
-    let op_and_val: Vec<&str> = line.split(' ').collect();
-
-    let (sign, val) = op_and_val[1].split_at(1);
-
-    let val_unsigned = val.parse::<i32>().unwrap();
-    let value = match sign {
-        "+" => val_unsigned,
-        "-" => -val_unsigned,
-        _ => panic!(),
-    };
-
-    match op_and_val[0] {
-        "nop" => Operation::NOP(value),
-        "acc" => Operation::ACC(value),
-        "jmp" => Operation::JMP(value),
-        _ => panic!(),
-    }
+    Computer::new(operations)
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -55,8 +41,41 @@ enum Operation {
     JMP(i32),
 }
 
+impl FromStr for Operation {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+
+        let op_and_val: Vec<&str> = s.split(' ').collect();
+
+        if op_and_val.len() != 2 {
+            return Err("failed to parse Operation because it did not have exactly one operation and one value part separated by a space".to_string())
+        }
+
+        let op_str = op_and_val[0];
+        let val = op_and_val[1];
+
+        let (sign, val) = val.split_at(1);
+
+        let val_unsigned = val.parse::<i32>().unwrap();
+        let value = match sign {
+            "+" => val_unsigned,
+            "-" => -val_unsigned,
+            _ => return Err("failed to parse Operation becuase the value sign was not - or +".to_string()),
+        };
+
+        match op_str {
+            "nop" => Ok(Operation::NOP(value)),
+            "acc" => Ok(Operation::ACC(value)),
+            "jmp" => Ok(Operation::JMP(value)),
+            unknown => Err(format!("failed to parse Operation because unknown operation type '{}' was unknown", unknown)),
+        }
+    }
+}
+
 impl Operation {
     fn execute(&self, state: &mut ComputerState) {
+
         state.visited.insert(state.instruction_ptr);
 
         match self {
