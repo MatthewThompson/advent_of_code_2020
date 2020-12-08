@@ -70,8 +70,6 @@ impl Operation {
     }
 }
 
-// It would make sense to make the computer have this as a field rather
-// than repeating them, but I don't want to do that.
 #[derive(Debug, Clone)]
 struct ComputerState {
     instruction_ptr: i32,
