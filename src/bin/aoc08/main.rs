@@ -56,24 +56,18 @@ enum Operation {
 }
 
 impl Operation {
-    fn execute(&self, cmp: &mut Computer) {
+    fn execute(&self, state: &mut ComputerState) {
+        state.visited.insert(state.instruction_ptr);
+
         match self {
-            Operation::NOP(_) => cmp.instruction_ptr += 1,
+            Operation::NOP(_) => state.instruction_ptr += 1,
             Operation::ACC(a) => {
-                cmp.accumulator += a;
-                cmp.instruction_ptr += 1;
+                state.accumulator += a;
+                state.instruction_ptr += 1;
             }
-            Operation::JMP(j) => cmp.instruction_ptr += j,
+            Operation::JMP(j) => state.instruction_ptr += j,
         }
     }
-}
-
-#[derive(Debug, Clone)]
-struct Computer {
-    instruction_ptr: i32,
-    visited: HashSet<i32>,
-    accumulator: i32,
-    instructions: Vec<Operation>,
 }
 
 // It would make sense to make the computer have this as a field rather
@@ -83,6 +77,22 @@ struct ComputerState {
     instruction_ptr: i32,
     visited: HashSet<i32>,
     accumulator: i32,
+}
+
+impl ComputerState {
+    pub fn new() -> Self {
+        ComputerState {
+            instruction_ptr: 0,
+            visited: HashSet::new(),
+            accumulator: 0,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+struct Computer {
+    state: ComputerState,
+    instructions: Vec<Operation>,
 }
 
 #[derive(Debug)]
@@ -95,9 +105,7 @@ enum ExitStatus {
 impl Computer {
     pub fn new(instructions: Vec<Operation>) -> Self {
         Computer {
-            instruction_ptr: 0,
-            visited: HashSet::new(),
-            accumulator: 0,
+            state: ComputerState::new(),
             instructions,
         }
     }
@@ -116,9 +124,7 @@ impl Computer {
     // I've been told)
     pub fn fix_instructions(&mut self) {
         loop {
-            let current_op = self.instructions[self.instruction_ptr as usize];
-
-            match current_op {
+            match self.current_operation() {
                 Operation::NOP(_) |
                 Operation::JMP(_) => {
                     match self.test_flip() {
@@ -134,60 +140,52 @@ impl Computer {
 
     fn check_finished(&self) -> Option<ExitStatus> {
 
-        if self.visited.get(&self.instruction_ptr).is_some() {
+        let current_ptr = self.state.instruction_ptr;
+
+        if self.state.visited.get(&current_ptr).is_some() {
             return Some(ExitStatus::InfiniteLoop);
         }
 
         let len = self.instructions.len() as i32;
-        if self.instruction_ptr > len || self.instruction_ptr < 0 {
+        if current_ptr > len || current_ptr < 0 {
             return Some(ExitStatus::OutOfBounds);
         }
-        if self.instruction_ptr == len {
+        if current_ptr == len {
             return Some(ExitStatus::Success);
         }
 
         None
     }
 
+    fn current_operation(&self) -> Operation {
+        self.instructions[self.state.instruction_ptr as usize]
+    }
+
+    fn current_operation_mut(&mut self) -> &mut Operation {
+        &mut self.instructions[self.state.instruction_ptr as usize]
+    }
+
     fn step(&mut self) {
-
-        self.visited.insert(self.instruction_ptr);
-
-        let operation = self.instructions[self.instruction_ptr as usize];
-        operation.execute(self);
-    }
-
-    fn get_state(&self) -> ComputerState {
-        ComputerState {
-            instruction_ptr: self.instruction_ptr,
-            visited: self.visited.clone(),
-            accumulator: self.accumulator,
-        }
-    }
-
-    fn set_state(&mut self, state: ComputerState) {
-        self.instruction_ptr = state.instruction_ptr;
-        self.visited = state.visited;
-        self.accumulator = state.accumulator;
+        self.current_operation().execute(&mut self.state);
     }
 
     fn flip_branch(&mut self) {
-        let op = &mut self.instructions[self.instruction_ptr as usize];
-        *op = match *op {
-            Operation::NOP(v) => Operation::JMP(v),
-            Operation::JMP(v) => Operation::NOP(v),
+        let op = self.current_operation_mut();
+        *op = match op {
+            Operation::NOP(v) => Operation::JMP(*v),
+            Operation::JMP(v) => Operation::NOP(*v),
             _ => panic!("Attempted to flip an instruction that was not a noop or a jump"),
         }
     }
 
     fn test_flip(&mut self) -> ExitStatus {
-        let snapshot = self.get_state();
+        let snapshot = self.state.clone();
         self.flip_branch();
 
         match self.run() {
             ExitStatus::Success => ExitStatus::Success,
             status => {
-                self.set_state(snapshot);
+                self.state = snapshot;
                 self.flip_branch();
                 status
             }
@@ -220,7 +218,7 @@ fn main() {
 
 fn part_one(cmp: &mut Computer) -> i32 {
     match cmp.run() {
-        ExitStatus::InfiniteLoop => cmp.accumulator,
+        ExitStatus::InfiniteLoop => cmp.state.accumulator,
         ExitStatus::Success => panic!("Error: expected infinite loop but computer terminated successfully."),
         ExitStatus::OutOfBounds => panic!("Error: expected infinite loop but instruction went out of bounds before computer could terminate."),
     }
@@ -229,7 +227,7 @@ fn part_one(cmp: &mut Computer) -> i32 {
 fn part_two(cmp: &mut Computer) -> i32 {
 
     cmp.fix_instructions();
-    cmp.accumulator
+    cmp.state.accumulator
 }
 
 
