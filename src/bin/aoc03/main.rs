@@ -18,7 +18,7 @@ fn get_input() -> std::string::String {
     }
 }
 
-fn parse_input(input: std::string::String) -> TobogganMap {
+fn parse_input(input: std::string::String) -> Vec<Vec<Space>> {
 
     input.lines()
         .map(|s| parse_row(s.to_string()))
@@ -43,7 +43,7 @@ enum Space {
     Tree,
 }
 
-type TobogganMap = Vec<Vec<Space>>;
+type TobogganMap = [Vec<Space>];
 
 #[derive(Copy, Clone)]
 struct Slope {
@@ -52,7 +52,7 @@ struct Slope {
 }
 
 // Travel all the way from (0,0) to the bottom for a given slope.
-// return thenumber of trees we hit.
+// return the number of trees we hit.
 fn count_trees_on_slope(map: &TobogganMap, direction: Slope) -> usize {
 
     let width = map[0].len();

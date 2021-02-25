@@ -98,12 +98,12 @@ struct DatabasePassword {
     policy: Policy,
 }
 
-fn part_one(passwords: &Vec<DatabasePassword>) -> usize {
+fn part_one(passwords: &[DatabasePassword]) -> usize {
 
     passwords.iter().filter(|p| check_password_validity_one(p)).count()
 }
 
-fn part_two(passwords: &Vec<DatabasePassword>) -> usize {
+fn part_two(passwords: &[DatabasePassword]) -> usize {
 
     passwords.iter().filter(|p| check_password_validity_two(p)).count()
 }

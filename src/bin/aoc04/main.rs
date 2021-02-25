@@ -131,19 +131,19 @@ impl Passport {
 
     fn byr_valid(&self) -> bool {
         self.byr.map_or(false, |byr| {
-            byr >= 1920 && byr <= 2002
+            (1920..=2002).contains(&byr)
         })
     }
 
     fn iyr_valid(&self) -> bool {
         self.iyr.map_or(false, |iyr| {
-            iyr >= 2010 && iyr <= 2020
+            (2010..=2020).contains(&iyr)
         })
     }
 
     fn eyr_valid(&self) -> bool {
         self.eyr.map_or(false, |eyr| {
-            eyr >= 2020 && eyr <= 2030
+            (2020..=2030).contains(&eyr)
         })
     }
 
@@ -221,12 +221,12 @@ fn main() {
     println!("Total: {:?}", part_2_time.duration_since(start_time).unwrap());
 }
 
-fn part_one(passports: &Vec<Passport>) -> usize {
+fn part_one(passports: &[Passport]) -> usize {
 
     passports.iter().filter(|p| p.has_required_fields()).count()
 }
 
-fn part_two(passports: &Vec<Passport>) -> usize {
+fn part_two(passports: &[Passport]) -> usize {
 
     passports.iter().filter(|p| p.is_valid()).count()
 }

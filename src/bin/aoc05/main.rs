@@ -51,12 +51,12 @@ fn bin_str_to_int(bin_str: &str) -> u32 {
 
 fn main() {
     let start_time = SystemTime::now();
-    let seat_ids = parse_input(get_input());
+    let mut seat_ids = parse_input(get_input());
 
     let setup_time = SystemTime::now();
     let p1 = part_one(&seat_ids);
     let part_1_time = SystemTime::now();
-    let p2 = part_two(&mut seat_ids.clone());
+    let p2 = part_two(&mut seat_ids);
     let part_2_time = SystemTime::now();
 
     println!("The solution for part one is: {}", p1);
@@ -70,7 +70,7 @@ fn main() {
     println!("Total: {:?}", part_2_time.duration_since(start_time).unwrap());
 }
 
-fn part_one(seat_ids: &Vec<u32>) -> u32 {
+fn part_one(seat_ids: &[u32]) -> u32 {
     let max_val = seat_ids.iter().max();
     match max_val {
         Some(&max) => max,

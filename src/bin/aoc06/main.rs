@@ -64,7 +64,7 @@ fn main() {
     println!("Total: {:?}", part_2_time.duration_since(start_time).unwrap());
 }
 
-fn union_sets<T: Eq + Hash + Copy>(sets: &Vec<HashSet<T>>) -> HashSet<T>
+fn union_sets<T: Eq + Hash + Copy>(sets: &[HashSet<T>]) -> HashSet<T>
 {
 
     sets.iter()
@@ -73,7 +73,7 @@ fn union_sets<T: Eq + Hash + Copy>(sets: &Vec<HashSet<T>>) -> HashSet<T>
         })
 }
 
-fn intersect_sets<T: Eq + Hash + Copy>(sets: &Vec<HashSet<T>>) -> HashSet<T> {
+fn intersect_sets<T: Eq + Hash + Copy>(sets: &[HashSet<T>]) -> HashSet<T> {
 
     sets.iter()
         .skip(1)
@@ -82,17 +82,17 @@ fn intersect_sets<T: Eq + Hash + Copy>(sets: &Vec<HashSet<T>>) -> HashSet<T> {
         })
 }
 
-fn sum_by<T>(collection: &Vec<T>, operator: &dyn Fn(&T) -> usize) -> usize {
+fn sum_by<T>(collection: &[T], operator: &dyn Fn(&T) -> usize) -> usize {
 
     collection.iter().fold(0, |acc, next| acc + operator(next))
 }
 
-fn part_one(group_answers: &Vec<GroupAnswers>) -> usize {
+fn part_one(group_answers: &[GroupAnswers]) -> usize {
 
     sum_by(group_answers, &|a| union_sets(a).len())
 }
 
-fn part_two(group_answers: &Vec<GroupAnswers>) -> usize {
+fn part_two(group_answers: &[GroupAnswers]) -> usize {
 
     sum_by(group_answers, &|a| intersect_sets(a).len())
 }

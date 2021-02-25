@@ -45,7 +45,7 @@ fn main() {
     println!("Total: {:?}", part_2_time.duration_since(start_time).unwrap());
 }
 
-fn part_one(values: &Vec<i64>) -> i64 {
+fn part_one(values: &[i64]) -> i64 {
 
     let (a, b) = find_sum_parts(values, 2020);
     let solution = a * b;
@@ -55,9 +55,9 @@ fn part_one(values: &Vec<i64>) -> i64 {
     solution
 }
 
-fn find_sum_parts(values: &Vec<i64>, total: i64) -> (i64, i64) {
+fn find_sum_parts(values: &[i64], total: i64) -> (i64, i64) {
 
-    let mut sorted = values.clone();
+    let mut sorted = values.to_vec();
     sorted.sort_unstable();
 
     let mut low_index = 0;
@@ -79,7 +79,7 @@ fn find_sum_parts(values: &Vec<i64>, total: i64) -> (i64, i64) {
     panic!("No solution.");
 }
 
-fn part_two(values: &Vec<i64>) -> i64 {
+fn part_two(values: &[i64]) -> i64 {
 
     let (a, b, c) = find_3_sum_parts(values, 2020);
     let solution = a * b * c;
@@ -89,9 +89,9 @@ fn part_two(values: &Vec<i64>) -> i64 {
     solution
 }
 
-fn find_3_sum_parts(values: &Vec<i64>, total: i64) -> (i64, i64, i64) {
+fn find_3_sum_parts(values: &[i64], total: i64) -> (i64, i64, i64) {
 
-    let mut sorted = values.clone();
+    let mut sorted = values.to_vec();
     sorted.sort_unstable();
 
     let mut middle_index = 1;
